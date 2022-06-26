@@ -1,5 +1,4 @@
-import { isObject, isDate } from './util'
-import { AxiosRequestConfig } from '../types'
+import { isPlainObject, isDate } from './util'
 
 function encode(val: string): string {
   return encodeURIComponent(val)
@@ -22,16 +21,15 @@ function formatUrl(url: string) {
   return url
 }
 
-export function buildUrl(config: AxiosRequestConfig) {
-  const { url, params = {} } = config
-  if (Object.keys(params).length === 0) return url
+export function buildUrl(url: string, params?: any) {
+  if (!params) return url
 
   const stringParam: string[] = []
 
   Object.keys(params).forEach(key => {
     const val = params[key]
 
-    if (val === null || typeof val === 'undefined') return
+    if (val == null) return
 
     let values = []
     if (Array.isArray(val)) {
@@ -44,7 +42,7 @@ export function buildUrl(config: AxiosRequestConfig) {
     values.forEach(val => {
       if (isDate(val)) {
         val = val.toISOString()
-      } else if (isObject(val)) {
+      } else if (isPlainObject(val)) {
         val = JSON.stringify(val)
       }
       stringParam.push(`${encode(key)}=${encode(val)}`)

@@ -1,10 +1,11 @@
 import axios from '../../src/index'
 
+// 请求带有params数据的测试示例
 axios({
   method: 'get',
   url: '/base/get',
   params: {
-    foo: ['bar', 'baz']
+    foo: [[[2]], 'baz']
   }
 })
 
@@ -59,4 +60,22 @@ axios({
   params: {
     bar: 'baz'
   }
+})
+
+// 请求带有body数据的测试示例
+axios({
+  method: 'post',
+  url: '/base/post',
+  data: {
+    a: 1,
+    b: 2
+  }
+})
+
+const arr = new Int32Array([21, 31])
+
+axios({
+  method: 'post',
+  url: '/base/buffer',
+  data: arr
 })
