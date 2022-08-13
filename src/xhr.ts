@@ -1,10 +1,10 @@
 import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from './types'
 import { parseHeaders } from './helpers/header'
-import { transformResponse } from './helpers/data'
+import { createError } from './helpers/error'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
-  return new Promise(resolve => {
-    const { url, method = 'get', data = null, headers, responseType } = config
+  return new Promise((resolve, reject) => {
+    const { url, method = 'get', data = null, headers, responseType, timeout } = config
 
     const request = new XMLHttpRequest()
 
@@ -12,19 +12,34 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       request.responseType = responseType
     }
 
+    if (timeout) {
+      request.timeout = timeout
+    }
+
     request.open(method.toUpperCase(), url, true)
+
+    request.onerror = function() {
+      reject(createError(`Network Error`, config, null, request))
+    }
+
+    request.ontimeout = function() {
+      reject(createError(`Timeout if ${timeout} ms exceeded`, config, 'ECONNABORTED', request))
+    }
 
     request.onreadystatechange = function() {
       if (request.readyState !== 4) {
         return
       }
 
+      if (request.status === 0) {
+        return
+      }
+
       const responseHeaders = parseHeaders(request.getAllResponseHeaders())
-      // transformResponse(request)
-      // const responseData =
-      //   responseType && responseType !== 'text' ? request.response : request.responseText
+      const responseData =
+        responseType && responseType !== 'text' ? request.response : request.responseText
       const response: AxiosResponse = {
-        data: request.response,
+        data: responseData,
         status: request.status,
         statusText: request.statusText,
         headers: responseHeaders,
@@ -32,7 +47,23 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         request
       }
 
-      resolve(response)
+      handleResponse(response)
+    }
+
+    function handleResponse(response: AxiosResponse) {
+      if (response.status >= 200 && response.status < 300) {
+        resolve(response)
+      } else {
+        reject(
+          createError(
+            `Request failed with status code ${response.status}`,
+            config,
+            null,
+            request,
+            response
+          )
+        )
+      }
     }
 
     Object.keys(headers).forEach(name => {
