@@ -15,13 +15,25 @@ export type Method =
   | 'Patch'
 
 export interface Axios {
+  interceptors: {
+    request: AxiosInterceptorManager<AxiosRequestConfig>
+    response: AxiosInterceptorManager<AxiosResponse>
+  }
+
   request<T = any>(config: AxiosRequestConfig): AxiosPromise<T>
+
   get<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
+
   delete<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
+
   head<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
+
   options<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
+
   post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
+
   put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
+
   patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
 }
 
@@ -57,4 +69,17 @@ export interface AxiosError<T = any> extends Error {
   request?: any
   response?: AxiosResponse
   isAxiosError: boolean
+}
+
+export interface AxiosInterceptorManager<T> {
+  use(resolved: ResolvedFn<T>, rejected?: RejectedFn): number
+  eject(id: number): void
+}
+
+export interface ResolvedFn<T = any> {
+  (val: T): T | Promise<T>
+}
+
+export interface RejectedFn {
+  (err: any): any
 }
