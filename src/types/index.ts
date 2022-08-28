@@ -15,6 +15,7 @@ export type Method =
   | 'Patch'
 
 export interface Axios {
+  defaults: AxiosRequestConfig
   interceptors: {
     request: AxiosInterceptorManager<AxiosRequestConfig>
     response: AxiosInterceptorManager<AxiosResponse>
@@ -44,12 +45,13 @@ export interface AxiosInstance extends Axios {
 
 export interface AxiosRequestConfig {
   url?: string
-  method: Method
+  method?: Method
   params?: any
   data?: any
   headers?: any
   responseType?: XMLHttpRequestResponseType
   timeout?: number
+  [propName: string]: any
 }
 
 export interface AxiosResponse<T = any> {
