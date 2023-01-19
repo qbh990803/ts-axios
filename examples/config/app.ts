@@ -16,10 +16,35 @@ import qs from 'qs'
 //   console.log(res.data)
 // })
 
-axios({
+// axios({
+//   transformRequest: [
+//     function(data) {
+//       console.log('data', data)
+//       return qs.stringify(data)
+//     },
+//     ...(axios.defaults.transformRequest as AxiosTransformer[])
+//   ],
+//   transformResponse: [
+//     ...(axios.defaults.transformResponse as AxiosTransformer[]),
+//     function(data) {
+//       if (typeof data === 'object') {
+//         data.b = 2
+//       }
+//       return data
+//     }
+//   ],
+//   url: '/config/post',
+//   method: 'post',
+//   data: {
+//     a: 1
+//   }
+// }).then(res => {
+//   console.log(res.data)
+// })
+
+const instance = axios.create({
   transformRequest: [
     function(data) {
-      console.log('data', data)
       return qs.stringify(data)
     },
     ...(axios.defaults.transformRequest as AxiosTransformer[])
@@ -28,11 +53,14 @@ axios({
     ...(axios.defaults.transformResponse as AxiosTransformer[]),
     function(data) {
       if (typeof data === 'object') {
-        data.b = 2
+        data.b = 6
       }
       return data
     }
-  ],
+  ]
+})
+
+instance({
   url: '/config/post',
   method: 'post',
   data: {
