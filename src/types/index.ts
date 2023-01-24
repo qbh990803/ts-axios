@@ -59,10 +59,11 @@ export interface AxiosRequestConfig {
   headers?: any
   responseType?: XMLHttpRequestResponseType
   timeout?: number
-  [propName: string]: any
   cancelToken?: CancelToken
   transformRequest?: AxiosTransformer | AxiosTransformer[]
   transformResponse?: AxiosTransformer | AxiosTransformer[]
+  withCredentials?: boolean
+  [propName: string]: any
 }
 
 export interface AxiosResponse<T = any> {
