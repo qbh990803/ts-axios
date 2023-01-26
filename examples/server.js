@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
@@ -5,12 +6,12 @@ const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 const WebpackConfig = require('./webpack.config')
+const multipart = require('connect-multiparty')
 
 require('./server2')
 
 const app = express()
 const compiler = webpack(WebpackConfig)
-
 app.use(
   webpackDevMiddleware(compiler, {
     publicPath: '/__build__/',
@@ -34,6 +35,12 @@ app.use(
     setHeaders(res) {
       res.cookie('XSRF-TOKEN-D', '1234abc')
     }
+  })
+)
+
+app.use(
+  multipart({
+    uploadDir: path.resolve(__dirname + '/more/upload-file') // 设置上传目录
   })
 )
 
@@ -179,5 +186,10 @@ function registerCancelRouter() {
 function registerMoreRouter() {
   router.get('/more/get', function(req, res) {
     res.json(req.cookies)
+  })
+
+  router.post('/more/upload', function(req, res) {
+    console.log(req.body, req.files)
+    res.end('upload success!')
   })
 }
