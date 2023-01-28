@@ -6,7 +6,7 @@ import {
   ResolvedFn,
   RejectedFn
 } from '../types'
-import dispatchRequest from './dispatchRequest'
+import dispatchRequest, { transformURL } from './dispatchRequest'
 import InterceptorManager from './InterceptorManager'
 import mergeConfig from './mergeConfig'
 
@@ -104,6 +104,11 @@ class Axios<T> {
 
   dispatchRequestWithData(url: string, method: Method, data?: any, config?: AxiosRequestConfig) {
     return this.request(Object.assign(config || {}, { url, method, data }))
+  }
+
+  getUrl(config?: AxiosRequestConfig): string {
+    config = mergeConfig(this.defaults, config)
+    return transformURL(config)
   }
 }
 
