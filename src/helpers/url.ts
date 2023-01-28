@@ -1,4 +1,4 @@
-import { isPlainObject, isDate } from './util'
+import { isPlainObject, isDate, isURLSearchParams } from './util'
 
 interface URLOrigin {
   protocol: string
@@ -16,45 +16,55 @@ function encode(val: string): string {
     .replace(/%5D/gi, ']')
 }
 
-function formatUrl(url: string) {
-  if (url.includes('#')) {
-    url = url.split('#')[0]
-  }
-
-  url += url.includes('?') ? '&' : '?'
-
-  return url
-}
-
-export function buildUrl(url: string, params?: any) {
+export function buildUrl(url: string, params?: any, paramsSerializer?: (params: any) => string) {
   if (!params) return url
 
-  const stringParam: string[] = []
+  let serializedParams
 
-  Object.keys(params).forEach(key => {
-    const val = params[key]
+  if (paramsSerializer) {
+    serializedParams = paramsSerializer(params)
+  } else if (isURLSearchParams(params)) {
+    serializedParams = params.toString()
+  } else {
+    const parts: string[] = []
 
-    if (val == null) return
+    Object.keys(params).forEach(key => {
+      const val = params[key]
 
-    let values = []
-    if (Array.isArray(val)) {
-      values = val
-      key += '[]'
-    } else {
-      values = [val]
+      if (val == null) return
+
+      let values = []
+      if (Array.isArray(val)) {
+        values = val
+        key += '[]'
+      } else {
+        values = [val]
+      }
+
+      values.forEach(val => {
+        if (isDate(val)) {
+          val = val.toISOString()
+        } else if (isPlainObject(val)) {
+          val = JSON.stringify(val)
+        }
+        parts.push(`${encode(key)}=${encode(val)}`)
+      })
+    })
+
+    serializedParams = parts.join('&')
+  }
+
+  if (serializedParams) {
+    const markIndex = url.indexOf('#')
+
+    if (markIndex !== -1) {
+      url = url.slice(0, markIndex)
     }
 
-    values.forEach(val => {
-      if (isDate(val)) {
-        val = val.toISOString()
-      } else if (isPlainObject(val)) {
-        val = JSON.stringify(val)
-      }
-      stringParam.push(`${encode(key)}=${encode(val)}`)
-    })
-  })
+    url += (url.indexOf('?') === -1 ? '?' : '&') + serializedParams
+  }
 
-  return formatUrl(url) + stringParam.join('&')
+  return url
 }
 
 export function isURLSameOrigin(requestURL: string): boolean {
