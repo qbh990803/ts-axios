@@ -1,4 +1,3 @@
-import { isatty } from 'tty'
 import { buildURL, isAbsoluteURL, combineURL, isURLSameOrigin } from '../../src/helpers/url'
 
 describe('helpers:url', () => {

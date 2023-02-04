@@ -1591,6 +1591,11 @@
     "@types/istanbul-lib-coverage" "*"
     "@types/istanbul-lib-report" "*"
 
+"@types/jasmine-ajax@^3.3.3":
+  "integrity" "sha512-e2iJYrdwfxr6WmLHxNjISUgbrbGaRsFHsc9xnrq8SGFzbSYPDZ4lmAkIulAAjqrkZ1z21OJCZsZwWMnxoeX7+A=="
+  "resolved" "https://registry.npmmirror.com/@types/jasmine-ajax/-/jasmine-ajax-3.3.3.tgz"
+  "version" "3.3.3"
+
 "@types/jest@^24.0.18":
   "integrity" "sha512-Fb38HkXSVA4L8fGKEZ6le5bB8r6MRWlOCZbVuWZcmOMSCd2wCYOwN1ibj8daIoV9naq7aaOZjrLCoCMptKU/4Q=="
   "resolved" "https://registry.npmmirror.com/@types/jest/-/jest-24.9.1.tgz"
@@ -6257,6 +6262,16 @@
   "version" "2.2.7"
   dependencies:
     "html-escaper" "^2.0.0"
+
+"jasmine-ajax@^4.0.0":
+  "integrity" "sha512-htTxNw38BSHxxmd8RRMejocdPqLalGHU6n3HWFbzp/S8AuTQd1MYjkSH3dYDsbZ7EV1Xqx/b94m3tKaVSVBV2A=="
+  "resolved" "https://registry.npmmirror.com/jasmine-ajax/-/jasmine-ajax-4.0.0.tgz"
+  "version" "4.0.0"
+
+"jasmine-core@^4.5.0":
+  "integrity" "sha512-9PMzyvhtocxb3aXJVOPqBDswdgyAeSB81QnLop4npOpbqnheaTEwPc9ZloQeVswugPManznQBjD8kWDTjlnHuw=="
+  "resolved" "https://registry.npmmirror.com/jasmine-core/-/jasmine-core-4.5.0.tgz"
+  "version" "4.5.0"
 
 "java-properties@^1.0.0":
   "integrity" "sha512-qjdpeo2yKlYTH7nFdK0vbZWuTCesk4o63v5iVOlhMQPfuIZQfW/HI35SjfhA+4qpg36rnFSvUK5b1m+ckIblQQ=="
