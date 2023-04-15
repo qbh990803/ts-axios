@@ -1,4 +1,4 @@
-import { isPlainObject, isDate, isURLSearchParams } from './util'
+import { isDate, isPlainObject, isURLSearchParams } from './util'
 
 interface URLOrigin {
   protocol: string
@@ -16,8 +16,14 @@ function encode(val: string): string {
     .replace(/%5D/gi, ']')
 }
 
-export function buildURL(url: string, params?: any, paramsSerializer?: (params: any) => string) {
-  if (!params) return url
+export function buildURL(
+  url: string,
+  params?: any,
+  paramsSerializer?: (params: any) => string
+): string {
+  if (!params) {
+    return url
+  }
 
   let serializedParams
 
@@ -30,9 +36,9 @@ export function buildURL(url: string, params?: any, paramsSerializer?: (params: 
 
     Object.keys(params).forEach(key => {
       const val = params[key]
-
-      if (val == null) return
-
+      if (val === null || typeof val === 'undefined') {
+        return
+      }
       let values = []
       if (Array.isArray(val)) {
         values = val
@@ -40,7 +46,6 @@ export function buildURL(url: string, params?: any, paramsSerializer?: (params: 
       } else {
         values = [val]
       }
-
       values.forEach(val => {
         if (isDate(val)) {
           val = val.toISOString()
@@ -56,7 +61,6 @@ export function buildURL(url: string, params?: any, paramsSerializer?: (params: 
 
   if (serializedParams) {
     const markIndex = url.indexOf('#')
-
     if (markIndex !== -1) {
       url = url.slice(0, markIndex)
     }
@@ -67,9 +71,16 @@ export function buildURL(url: string, params?: any, paramsSerializer?: (params: 
   return url
 }
 
+export function isAbsoluteURL(url: string): boolean {
+  return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url)
+}
+
+export function combineURL(baseURL: string, relativeURL?: string): string {
+  return relativeURL ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '') : baseURL
+}
+
 export function isURLSameOrigin(requestURL: string): boolean {
   const parsedOrigin = resolveURL(requestURL)
-
   return (
     parsedOrigin.protocol === currentOrigin.protocol && parsedOrigin.host === currentOrigin.host
   )
@@ -86,12 +97,4 @@ function resolveURL(url: string): URLOrigin {
     protocol,
     host
   }
-}
-
-export function isAbsoluteURL(url: string): boolean {
-  return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url)
-}
-
-export function combineURL(baseURL: string, relativeURL?: string): string {
-  return relativeURL ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '') : baseURL
 }

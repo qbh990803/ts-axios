@@ -1,9 +1,9 @@
 import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from '../types'
-import { parseHeaders } from '../helpers/header'
+import { parseHeaders } from '../helpers/headers'
 import { createError } from '../helpers/error'
 import { isURLSameOrigin } from '../helpers/url'
-import { isFormData } from '../helpers/util'
 import cookie from '../helpers/cookie'
+import { isFormData } from '../helpers/util'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
@@ -49,10 +49,6 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
       if (withCredentials) {
         request.withCredentials = withCredentials
-      }
-
-      if (auth) {
-        headers['Authorization'] = 'Basic ' + btoa(auth.username + ':' + auth.password)
       }
     }
 
@@ -106,9 +102,13 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
       if ((withCredentials || isURLSameOrigin(url!)) && xsrfCookieName) {
         const xsrfValue = cookie.read(xsrfCookieName)
-        if (xsrfValue) {
-          headers[xsrfHeaderName!] = xsrfValue
+        if (xsrfValue && xsrfHeaderName) {
+          headers[xsrfHeaderName] = xsrfValue
         }
+      }
+
+      if (auth) {
+        headers['Authorization'] = 'Basic ' + btoa(auth.username + ':' + auth.password)
       }
 
       Object.keys(headers).forEach(name => {
@@ -122,10 +122,17 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
     function processCancel(): void {
       if (cancelToken) {
-        cancelToken.promise.then(reason => {
-          request.abort()
-          reject(reason)
-        })
+        cancelToken.promise
+          .then(reason => {
+            request.abort()
+            reject(reason)
+          })
+          .catch(
+            /* istanbul ignore next */
+            () => {
+              // do nothing
+            }
+          )
       }
     }
 

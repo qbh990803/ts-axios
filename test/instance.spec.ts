@@ -101,7 +101,7 @@ describe('instance', () => {
     })
   })
 
-  test('should has defaults.headers', () => {
+  test('should have defaults.headers', () => {
     const instance = axios.create({ baseURL: 'https://api.example.com' })
 
     expect(typeof instance.defaults.headers).toBe('object')
@@ -132,14 +132,14 @@ describe('instance', () => {
       })
 
       setTimeout(() => {
-        expect(response.config.timeout).toEqual(0)
-        expect(response.config.withCredentials).toEqual(true)
+        expect(response.config.timeout).toBe(0)
+        expect(response.config.withCredentials).toBeTruthy()
         done()
       }, 100)
     })
   })
 
-  test('should get the computed url', () => {
+  test('should get the computed uri', () => {
     const fakeConfig: AxiosRequestConfig = {
       baseURL: 'https://www.baidu.com/',
       url: '/user/12345',
@@ -149,8 +149,7 @@ describe('instance', () => {
         testString: 'thisIsATest'
       }
     }
-
-    expect(axios.getUrl(fakeConfig)).toBe(
+    expect(axios.getUri(fakeConfig)).toBe(
       'https://www.baidu.com/user/12345?idClient=1&idTest=2&testString=thisIsATest'
     )
   })

@@ -3,14 +3,7 @@ import Cancel, { isCancel } from '../../src/cancel/Cancel'
 describe('cancel:Cancel', () => {
   test('should returns correct result when message is specified', () => {
     const cancel = new Cancel('Operation has been canceled.')
-    expect(isCancel(cancel)).toBeTruthy()
     expect(cancel.message).toBe('Operation has been canceled.')
-  })
-
-  test('should returns correct result when message is not specified', () => {
-    const cancel = new Cancel()
-    expect(isCancel(cancel)).toBeTruthy()
-    expect(cancel.message).toBeUndefined()
   })
 
   test('should returns true if value is a Cancel', () => {

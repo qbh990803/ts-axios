@@ -3,11 +3,15 @@ import { buildURL, isAbsoluteURL, combineURL, isURLSameOrigin } from '../../src/
 describe('helpers:url', () => {
   describe('buildURL', () => {
     test('should support null params', () => {
-      expect(buildURL('/foo', null)).toBe('/foo')
+      expect(buildURL('/foo')).toBe('/foo')
     })
 
     test('should support params', () => {
-      expect(buildURL('/foo', { foo: 'bar' })).toBe('/foo?foo=bar')
+      expect(
+        buildURL('/foo', {
+          foo: 'bar'
+        })
+      ).toBe('/foo?foo=bar')
     })
 
     test('should ignore if some param value is null', () => {
@@ -95,13 +99,13 @@ describe('helpers:url', () => {
   })
 
   describe('isAbsoluteURL', () => {
-    test('should return true if URL begins with valid schema name', () => {
+    test('should return true if URL begins with valid scheme name', () => {
       expect(isAbsoluteURL('https://api.github.com/users')).toBeTruthy()
-      expect(isAbsoluteURL('custom-schema-v1.0://example.com')).toBeTruthy()
+      expect(isAbsoluteURL('custom-scheme-v1.0://example.com/')).toBeTruthy()
       expect(isAbsoluteURL('HTTP://example.com/')).toBeTruthy()
     })
 
-    test('should return false is URL begins with invalid scheme name', () => {
+    test('should return false if URL begins with invalid scheme name', () => {
       expect(isAbsoluteURL('123://example.com/')).toBeFalsy()
       expect(isAbsoluteURL('!valid://example.com/')).toBeFalsy()
     })
@@ -110,7 +114,7 @@ describe('helpers:url', () => {
       expect(isAbsoluteURL('//example.com/')).toBeTruthy()
     })
 
-    test('should return false is URL is relative', () => {
+    test('should return false if URL is relative', () => {
       expect(isAbsoluteURL('/foo')).toBeFalsy()
       expect(isAbsoluteURL('foo')).toBeFalsy()
     })
@@ -138,8 +142,8 @@ describe('helpers:url', () => {
     })
   })
 
-  describe('isURLSomeOrigin', () => {
-    test('should detect somme origin', () => {
+  describe('isURLSameOrigin', () => {
+    test('should detect same origin', () => {
       expect(isURLSameOrigin(window.location.href)).toBeTruthy()
     })
 

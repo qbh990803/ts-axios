@@ -1,4 +1,5 @@
-import { Canceler, CancelExecutor, CancelTokenSource } from '../types'
+import { CancelExecutor, Canceler, CancelTokenSource } from '../types'
+
 import Cancel from './Cancel'
 
 interface ResolvePromise {
@@ -24,21 +25,20 @@ export default class CancelToken {
     })
   }
 
+  throwIfRequested(): void {
+    if (this.reason) {
+      throw this.reason
+    }
+  }
+
   static source(): CancelTokenSource {
     let cancel!: Canceler
     const token = new CancelToken(c => {
       cancel = c
     })
-
     return {
       cancel,
       token
-    }
-  }
-
-  throwIfRequested(): void {
-    if (this.reason) {
-      throw this.reason
     }
   }
 }

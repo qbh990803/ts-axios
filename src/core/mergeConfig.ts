@@ -1,5 +1,5 @@
-import { deepMerge, isPlainObject } from '../helpers/util'
 import { AxiosRequestConfig } from '../types'
+import { deepMerge, isPlainObject } from '../helpers/util'
 
 const strats = Object.create(null)
 
@@ -47,11 +47,11 @@ export default function mergeConfig(
 
   const config = Object.create(null)
 
-  for (const key in config2) {
+  for (let key in config2) {
     mergeField(key)
   }
 
-  for (const key in config1) {
+  for (let key in config1) {
     if (!config2[key]) {
       mergeField(key)
     }
